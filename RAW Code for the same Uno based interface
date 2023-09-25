@@ -1,0 +1,89 @@
+// Include necessary libraries
+#include <IRremote.h>
+#include <Servo.h>
+
+// Define pin numbers for components
+const int motorPin1 = 3; // Motor driver pins
+const int motorPin2 = 4;
+const int motorPin3 = 5;
+const int motorPin4 = 6;
+const int waterPumpPin = 7; // Water pump pin
+const int bladePin = 8;    // Grass cutter blade pin
+
+Servo servo; // Servo for seed planting
+
+// Define IR remote control parameters
+const int irReceiverPin = 9;
+IRrecv irrecv(irReceiverPin);
+decode_results results;
+
+void setup() {
+  // Initialize pins as inputs or outputs
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorPin3, OUTPUT);
+  pinMode(motorPin4, OUTPUT);
+  pinMode(waterPumpPin, OUTPUT);
+  pinMode(bladePin, OUTPUT);
+
+  // Initialize the servo for seed planting
+  servo.attach(10);
+
+  // Start the IR receiver
+  irrecv.enableIRIn();
+}
+
+void loop() {
+  if (irrecv.decode(&results)) {
+    // Process IR remote commands
+    int command = results.value;
+
+    switch (command) {
+      case 0xFFA25D: // Example command, replace with your IR remote codes
+        // Implement seed planting operation
+        plantSeeds();
+        break;
+
+      case 0xFF629D: // Another command
+        // Implement grass cutting operation
+        cutGrass();
+        break;
+
+      case 0xFFE21D: // Another command
+        // Implement plant watering operation
+        waterPlants();
+        break;
+
+      // Add more cases for other commands as needed
+
+      default:
+        // Handle unknown commands
+        break;
+    }
+
+    irrecv.resume(); // Receive the next value
+  }
+}
+
+void plantSeeds() {
+  // Implement seed planting operation using servo
+  servo.write(90); // Adjust servo angle as needed
+  delay(1000);     // Delay for seed planting
+  servo.write(0);  // Reset servo angle
+}
+
+void cutGrass() {
+  // Implement grass cutting operation using the motor
+  // Turn on the motor to cut grass
+  digitalWrite(bladePin, HIGH);
+  // Add delay or other logic to control the operation
+  digitalWrite(bladePin, LOW); // Turn off the motor
+}
+
+void waterPlants() {
+  // Implement plant watering operation using the water pump
+  // Turn on the water pump to water plants
+  digitalWrite(waterPumpPin, HIGH);
+  // Add delay or other logic to control the operation
+  digitalWrite(waterPumpPin, LOW); // Turn off the water pump
+}
